@@ -1,7 +1,6 @@
 "./Core/Src/CANSPI.o"
 "./Core/Src/Coms_Handler.o"
 "./Core/Src/MCP2515.o"
-"./Core/Src/Packet_Handler.o"
 "./Core/Src/USB_driver.o"
 "./Core/Src/dma.o"
 "./Core/Src/gpio.o"

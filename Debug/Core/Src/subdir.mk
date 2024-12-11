@@ -8,7 +8,6 @@ C_SRCS += \
 ../Core/Src/CANSPI.c \
 ../Core/Src/Coms_Handler.c \
 ../Core/Src/MCP2515.c \
-../Core/Src/Packet_Handler.c \
 ../Core/Src/USB_driver.c \
 ../Core/Src/dma.c \
 ../Core/Src/gpio.c \
@@ -26,7 +25,6 @@ OBJS += \
 ./Core/Src/CANSPI.o \
 ./Core/Src/Coms_Handler.o \
 ./Core/Src/MCP2515.o \
-./Core/Src/Packet_Handler.o \
 ./Core/Src/USB_driver.o \
 ./Core/Src/dma.o \
 ./Core/Src/gpio.o \
@@ -44,7 +42,6 @@ C_DEPS += \
 ./Core/Src/CANSPI.d \
 ./Core/Src/Coms_Handler.d \
 ./Core/Src/MCP2515.d \
-./Core/Src/Packet_Handler.d \
 ./Core/Src/USB_driver.d \
 ./Core/Src/dma.d \
 ./Core/Src/gpio.d \
@@ -66,7 +63,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/CANSPI.cyclo ./Core/Src/CANSPI.d ./Core/Src/CANSPI.o ./Core/Src/CANSPI.su ./Core/Src/Coms_Handler.cyclo ./Core/Src/Coms_Handler.d ./Core/Src/Coms_Handler.o ./Core/Src/Coms_Handler.su ./Core/Src/MCP2515.cyclo ./Core/Src/MCP2515.d ./Core/Src/MCP2515.o ./Core/Src/MCP2515.su ./Core/Src/Packet_Handler.cyclo ./Core/Src/Packet_Handler.d ./Core/Src/Packet_Handler.o ./Core/Src/Packet_Handler.su ./Core/Src/USB_driver.cyclo ./Core/Src/USB_driver.d ./Core/Src/USB_driver.o ./Core/Src/USB_driver.su ./Core/Src/dma.cyclo ./Core/Src/dma.d ./Core/Src/dma.o ./Core/Src/dma.su ./Core/Src/gpio.cyclo ./Core/Src/gpio.d ./Core/Src/gpio.o ./Core/Src/gpio.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/serial_commands.cyclo ./Core/Src/serial_commands.d ./Core/Src/serial_commands.o ./Core/Src/serial_commands.su ./Core/Src/spi.cyclo ./Core/Src/spi.d ./Core/Src/spi.o ./Core/Src/spi.su ./Core/Src/stm32f4xx_hal_msp.cyclo ./Core/Src/stm32f4xx_hal_msp.d ./Core/Src/stm32f4xx_hal_msp.o ./Core/Src/stm32f4xx_hal_msp.su ./Core/Src/stm32f4xx_it.cyclo ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/stm32f4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f4xx.cyclo ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/system_stm32f4xx.su ./Core/Src/usart.cyclo ./Core/Src/usart.d ./Core/Src/usart.o ./Core/Src/usart.su
+	-$(RM) ./Core/Src/CANSPI.cyclo ./Core/Src/CANSPI.d ./Core/Src/CANSPI.o ./Core/Src/CANSPI.su ./Core/Src/Coms_Handler.cyclo ./Core/Src/Coms_Handler.d ./Core/Src/Coms_Handler.o ./Core/Src/Coms_Handler.su ./Core/Src/MCP2515.cyclo ./Core/Src/MCP2515.d ./Core/Src/MCP2515.o ./Core/Src/MCP2515.su ./Core/Src/USB_driver.cyclo ./Core/Src/USB_driver.d ./Core/Src/USB_driver.o ./Core/Src/USB_driver.su ./Core/Src/dma.cyclo ./Core/Src/dma.d ./Core/Src/dma.o ./Core/Src/dma.su ./Core/Src/gpio.cyclo ./Core/Src/gpio.d ./Core/Src/gpio.o ./Core/Src/gpio.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/serial_commands.cyclo ./Core/Src/serial_commands.d ./Core/Src/serial_commands.o ./Core/Src/serial_commands.su ./Core/Src/spi.cyclo ./Core/Src/spi.d ./Core/Src/spi.o ./Core/Src/spi.su ./Core/Src/stm32f4xx_hal_msp.cyclo ./Core/Src/stm32f4xx_hal_msp.d ./Core/Src/stm32f4xx_hal_msp.o ./Core/Src/stm32f4xx_hal_msp.su ./Core/Src/stm32f4xx_it.cyclo ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/stm32f4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f4xx.cyclo ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/system_stm32f4xx.su ./Core/Src/usart.cyclo ./Core/Src/usart.d ./Core/Src/usart.o ./Core/Src/usart.su
 
 .PHONY: clean-Core-2f-Src
 

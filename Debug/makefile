@@ -64,8 +64,8 @@ all: main-build
 main-build: USB_to_CAN.elf secondary-outputs
 
 # Tool invocations
-USB_to_CAN.elf USB_to_CAN.map: $(OBJS) $(USER_OBJS) C:\Users\etogb\Code_Projects\USB_to_CAN\STM32F411CEUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "USB_to_CAN.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\etogb\Code_Projects\USB_to_CAN\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="USB_to_CAN.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+USB_to_CAN.elf USB_to_CAN.map: $(OBJS) $(USER_OBJS) C:\Users\etogb\OneDrive\Documents\GitHub\USB_to_CAN\STM32F411CEUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "USB_to_CAN.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\etogb\OneDrive\Documents\GitHub\USB_to_CAN\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="USB_to_CAN.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

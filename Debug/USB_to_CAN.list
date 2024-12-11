@@ -35,17 +35,17 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  15 .debug_rnglists 00000dbf  00000000  00000000  00028168  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  0001a0ff  00000000  00000000  00028f27  2**0
+ 16 .debug_macro  000193df  00000000  00000000  00028f27  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00019cbe  00000000  00000000  00043026  2**0
+ 17 .debug_line   00019cbe  00000000  00000000  00042306  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0008c938  00000000  00000000  0005cce4  2**0
+ 18 .debug_str    0008c972  00000000  00000000  0005bfc4  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  000e961c  2**0
+ 19 .comment      00000043  00000000  00000000  000e8936  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00004944  00000000  00000000  000e9660  2**2
+ 20 .debug_frame  00004944  00000000  00000000  000e897c  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000056  00000000  00000000  000edfa4  2**0
+ 21 .debug_line_str 00000056  00000000  00000000  000ed2c0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -13805,6 +13805,11 @@ HAL_StatusTypeDef HAL_UARTEx_ReceiveToIdle_DMA(UART_HandleTypeDef *huart, uint8_
  8005142:	681b      	ldr	r3, [r3, #0]
  8005144:	330c      	adds	r3, #12
  8005146:	61bb      	str	r3, [r7, #24]
+ */
+__STATIC_FORCEINLINE uint32_t __LDREXW(volatile uint32_t *addr)
+{
+    uint32_t result;
+
    __ASM volatile ("ldrex %0, %1" : "=r" (result) : "Q" (*addr) );
  8005148:	69bb      	ldr	r3, [r7, #24]
  800514a:	e853 3f00 	ldrex	r3, [r3]
@@ -13819,6 +13824,11 @@ HAL_StatusTypeDef HAL_UARTEx_ReceiveToIdle_DMA(UART_HandleTypeDef *huart, uint8_
  800515e:	6aba      	ldr	r2, [r7, #40]	@ 0x28
  8005160:	627a      	str	r2, [r7, #36]	@ 0x24
  8005162:	623b      	str	r3, [r7, #32]
+ */
+__STATIC_FORCEINLINE uint32_t __STREXW(uint32_t value, volatile uint32_t *addr)
+{
+   uint32_t result;
+
    __ASM volatile ("strex %0, %2, %1" : "=&r" (result), "=Q" (*addr) : "r" (value) );
  8005164:	6a39      	ldr	r1, [r7, #32]
  8005166:	6a7a      	ldr	r2, [r7, #36]	@ 0x24

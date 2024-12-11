@@ -1,0 +1,11 @@
+../Core/Src/Coms_Handler.c:12:13:ComsHandler_PacketToBuf	4
+../Core/Src/Coms_Handler.c:34:13:ComsHandler_BufToPacket	9
+../Core/Src/Coms_Handler.c:76:26:UART_Send	1
+../Core/Src/Coms_Handler.c:83:26:UART_Receive	1
+../Core/Src/Coms_Handler.c:90:26:USB_Send	2
+../Core/Src/Coms_Handler.c:99:26:USB_Receive	1
+../Core/Src/Coms_Handler.c:106:26:CAN_Send	1
+../Core/Src/Coms_Handler.c:132:26:CAN_Receive	1
+../Core/Src/Coms_Handler.c:160:6:Comm_Init	4
+../Core/Src/Coms_Handler.c:178:19:Comm_Send	1
+../Core/Src/Coms_Handler.c:184:19:Comm_Receive	1
