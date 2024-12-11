@@ -1,7 +1,0 @@
-../Core/Src/serial_commands.c:14:6:SerialCommands_Init	1
-../Core/Src/serial_commands.c:24:13:SerialCommands_ProcessPacket	3
-../Core/Src/serial_commands.c:47:6:SerialCommands_HandleUARTInterrupt	1
-../Core/Src/serial_commands.c:56:6:SerialCommands_SetupRecieve	1
-../Core/Src/serial_commands.c:70:6:SerialCommands_PacketSend	4
-../Core/Src/serial_commands.c:94:6:SerialCommands_Send	1
-../Core/Src/serial_commands.c:107:6:SerialCommands_BigSend	1

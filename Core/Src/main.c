@@ -26,10 +26,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "Coms_Handler.h"
 #include "CANSPI.h"
 #include "usbd_cdc_if.h"
-#include "USB_driver.h"
-#include "serial_commands.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,9 +49,11 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-	uCAN_MSG txMessage;
-	uCAN_MSG rxMessage;
-	USBCommand_t input;
+uCAN_MSG txMessage;
+uCAN_MSG rxMessage;
+
+ComsInterface_t usb;
+ComsInterface_t serial;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -101,9 +102,9 @@ int main(void)
   MX_USART1_UART_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  USB_Init();
-  CANSPI_Initialize();
-  SerialCommands_Init(&huart1);
+  //CANSPI_Initialize();
+  Comm_Init(&usb, COMM_USB, NULL);
+  Comm_Init(&serial, COMM_UART, &huart1);
 
   /* USER CODE END 2 */
 
@@ -111,23 +112,32 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  USB_DoEvents();
-	  input = USB_GetCommand();
-	  SerialCommands_PacketSend(input);
-	  if(!input.invalid) {
-		  txMessage.frame.idType = dEXTENDED_CAN_MSG_ID_2_0B;
-		  txMessage.frame.id = input.command;
-		  txMessage.frame.dlc = input.length;
-		  if(input.length > 0) txMessage.frame.data0 = input.data[0];
-		  if(input.length > 1) txMessage.frame.data1 = input.data[1];
-		  if(input.length > 2) txMessage.frame.data2 = input.data[2];
-		  if(input.length > 3) txMessage.frame.data3 = input.data[3];
-		  if(input.length > 4) txMessage.frame.data4 = input.data[4];
-		  if(input.length > 5) txMessage.frame.data5 = input.data[5];
-		  if(input.length > 6) txMessage.frame.data6 = input.data[6];
-		  if(input.length > 7) txMessage.frame.data7 = input.data[7];
-		  CANSPI_Transmit(&txMessage);
-	  }
+
+	  DecodedPacket_t input;
+	  DecodedPacket_t response;
+	  Comm_Process(&usb);
+	  Comm_Process(&serial);
+
+	  input = Comm_GetPacket(&usb);
+	  Comm_Send(&serial, &input);
+
+	  response = Comm_GetPacket(&serial);
+	  Comm_Send(&usb, &response);
+
+//	  if(!input.invalid) {
+//		  txMessage.frame.idType = dEXTENDED_CAN_MSG_ID_2_0B;
+//		  txMessage.frame.id = input.command;
+//		  txMessage.frame.dlc = input.length;
+//		  if(input.length > 0) txMessage.frame.data0 = input.data[0];
+//		  if(input.length > 1) txMessage.frame.data1 = input.data[1];
+//		  if(input.length > 2) txMessage.frame.data2 = input.data[2];
+//		  if(input.length > 3) txMessage.frame.data3 = input.data[3];
+//		  if(input.length > 4) txMessage.frame.data4 = input.data[4];
+//		  if(input.length > 5) txMessage.frame.data5 = input.data[5];
+//		  if(input.length > 6) txMessage.frame.data6 = input.data[6];
+//		  if(input.length > 7) txMessage.frame.data7 = input.data[7];
+//		  CANSPI_Transmit(&txMessage);
+//	  }
 
     /* USER CODE END WHILE */
 
@@ -184,12 +194,11 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void USB_CDC_RxHandler(uint8_t* Buf, uint32_t Len)
 {
-	USB_HandleRecieve(Buf, Len);
-    //CDC_Transmit_FS(Buf, Len);
+	Comm_Receive(&usb, Buf, Len);
 }
 
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size) {
-	SerialCommands_HandleUARTInterrupt();
+	Comm_Receive(&serial, 0, size);
 }
 /* USER CODE END 4 */
 

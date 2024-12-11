@@ -12,6 +12,9 @@
 #include <stdbool.h>
 #include "stm32f4xx_hal.h"
 
+#define CANSPI
+//#define FDCAN
+
 #define START_BYTE 0xAA
 #define MAX_DATA_SIZE 8 //bytes
 #define MAX_BUF_SIZE 13 //bytes
@@ -30,12 +33,6 @@ typedef enum {
     COMM_CAN
 } CommType;
 
-// Communication function pointers
-typedef struct {
-    HAL_StatusTypeDef (*Send)(void *config, uint8_t *data, uint16_t length);
-    HAL_StatusTypeDef (*Receive)(void *config, uint8_t *data, uint16_t length);
-} CommInterface;
-
 typedef struct {
     uint16_t command; // Command ID
     uint8_t data[MAX_DATA_SIZE];   // data bytes
@@ -47,6 +44,13 @@ typedef struct {
     uint8_t length;
     uint8_t data[MAX_BUF_SIZE];   // buffer read directly from USB/Serial input
 } StringBuffer_t;
+
+// Communication function pointers
+typedef struct {
+    HAL_StatusTypeDef (*Send)(void *config, DecodedPacket_t *packet);
+    HAL_StatusTypeDef (*Receive)(void *inst, uint8_t *data, uint16_t length);
+    void (*ConvertToPacket)(DecodedPacket_t *packet, void *buffer);
+} CommInterface;
 
 typedef struct {
 	uint8_t rxIdx;
@@ -61,8 +65,10 @@ typedef struct {
 
 // Public API
 void Comm_Init(ComsInterface_t *instance, CommType type, void *config);
-HAL_StatusTypeDef Comm_Send(ComsInterface_t *instance, uint8_t *data, uint16_t length);
+HAL_StatusTypeDef Comm_Send(ComsInterface_t *instance, DecodedPacket_t *packet);
 HAL_StatusTypeDef Comm_Receive(ComsInterface_t *instance, uint8_t *data, uint16_t length);
+void Comm_Process(ComsInterface_t *instance);
+DecodedPacket_t Comm_GetPacket(ComsInterface_t *instance);
 
 
 
