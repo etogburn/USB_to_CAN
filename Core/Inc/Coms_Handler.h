@@ -12,6 +12,8 @@
 #include <stdbool.h>
 #include "stm32f4xx_hal.h"
 
+#define DMA_UART_HANDLE &hdma_usart1_rx
+
 #define CANSPI
 //#define FDCAN
 

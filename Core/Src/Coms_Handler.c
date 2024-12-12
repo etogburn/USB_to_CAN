@@ -104,7 +104,7 @@ static HAL_StatusTypeDef UART_SetupReceive(void *inst)
 
     memset(instance->rxBuf[instance->rxIdx].data, 0, MAX_BUF_SIZE);
     HAL_UARTEx_ReceiveToIdle_DMA(huart, instance->rxBuf[instance->rxIdx].data, MAX_BUF_SIZE);
-    __HAL_DMA_DISABLE_IT(&hdma_usart1_rx, DMA_IT_HT);
+    __HAL_DMA_DISABLE_IT(DMA_UART_HANDLE, DMA_IT_HT);
 
     return HAL_OK;
 }
