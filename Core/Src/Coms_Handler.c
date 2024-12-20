@@ -6,7 +6,9 @@
  */
 
 #include "Coms_Handler.h"
+#ifdef HAS_USB_COMMS
 #include "usbd_cdc_if.h"
+#endif
 #include "usart.h"
 
 static void Coms_IncIdx(uint8_t *idx) {
@@ -45,6 +47,7 @@ static void ComsHandler_BufToPacket(DecodedPacket_t *packet, void *buf) {
 	memset(packet->data, 0, MAX_DATA_SIZE);
 
 	packet->invalid = false;
+	packet->isNew = true;
 
     if (buffer->data[0] != START_BYTE) {
     	packet->invalid = true; // Invalid start byte, discard packet
@@ -88,7 +91,7 @@ static HAL_StatusTypeDef UART_Send(void *config, DecodedPacket_t *packet)
     UART_HandleTypeDef *huart = (UART_HandleTypeDef *)config;
 
     StringBuffer_t buf;
-
+    memset(buf.data, 0, MAX_BUF_SIZE);
     ComsHandler_PacketToBuf(packet, &buf);
 
     return HAL_UART_Transmit(huart, buf.data, buf.length, HAL_MAX_DELAY);
@@ -125,7 +128,7 @@ static HAL_StatusTypeDef UART_Receive(void *inst, uint8_t *data, uint16_t length
 }
 
 
-
+#ifdef HAS_USB_COMMS
 // USB Send Function
 static HAL_StatusTypeDef USB_Send(void *config, DecodedPacket_t *packet)
 {
@@ -137,6 +140,7 @@ static HAL_StatusTypeDef USB_Send(void *config, DecodedPacket_t *packet)
     if (CDC_Transmit_FS(buf.data, buf.length) == USBD_OK)
         return HAL_OK;
     else
+
         return HAL_ERROR;
 }
 
@@ -154,6 +158,7 @@ static HAL_StatusTypeDef USB_Receive(void *inst, uint8_t *data, uint16_t length)
 
     return HAL_OK;
 }
+#endif
 
 // CAN Send Function
 static HAL_StatusTypeDef CAN_Send(void *config, DecodedPacket_t *packet)
@@ -226,24 +231,25 @@ void Comm_Init(ComsInterface_t *instance, CommType type, void *config)
 
     for(uint8_t i = 0; i < FIFO_SIZE; i++) {
     	instance->rxPacket[i].invalid = true;
+    	instance->rxPacket[i].isNew = false;
     }
 
     if (type == COMM_UART) {
         instance->interface.Send = UART_Send;
         instance->interface.Receive = UART_Receive;
+        instance->interface.ConvertToPacket = ComsHandler_BufToPacket;
         UART_SetupReceive(instance);
-    } else if (type == COMM_USB) {
+    }
+#ifdef HAS_USB_COMMS
+    else if (type == COMM_USB) {
         instance->interface.Send = USB_Send;
         instance->interface.Receive = USB_Receive;
-    } else if (type == COMM_CAN) {
+        instance->interface.ConvertToPacket = ComsHandler_BufToPacket;
+    }
+#endif
+    else if (type == COMM_CAN) {
         instance->interface.Send = CAN_Send;
         instance->interface.Receive = CAN_Receive;
-    }
-
-    if (type == COMM_UART || type == COMM_USB) {
-    	instance->interface.ConvertToPacket = ComsHandler_BufToPacket;
-    } else if (type == COMM_CAN) {
-
     }
 }
 
@@ -262,25 +268,43 @@ HAL_StatusTypeDef Comm_Receive(ComsInterface_t *instance, uint8_t *data, uint16_
 }
 
 void Comm_Process(ComsInterface_t *instance) {
+	static uint32_t currentTime;
+	static uint32_t lastTime;
 
-	if(instance->decodeIdx == instance->rxIdx) return;
-	instance->interface.ConvertToPacket(&instance->rxPacket[instance->decodeIdx],&instance->rxBuf[instance->decodeIdx]);
-	Coms_IncIdx(&instance->decodeIdx);
-	Comm_Process(instance);
+	currentTime = HAL_GetTick();
+
+	if(instance->type == COMM_UART) {
+		if(currentTime - lastTime > 1000) {
+			UART_SetupReceive(instance);
+			lastTime = currentTime;
+		}
+	}
+
+	while (instance->decodeIdx != instance->rxIdx) {
+		instance->interface.ConvertToPacket(&instance->rxPacket[instance->decodeIdx], &instance->rxBuf[instance->decodeIdx]);
+		Coms_IncIdx(&instance->decodeIdx);
+		lastTime = currentTime;
+	}
 }
 
 DecodedPacket_t Comm_GetPacket(ComsInterface_t *instance) {
-	DecodedPacket_t invalidPacket = {
-			.invalid = true
+	DecodedPacket_t packet = {
+			.invalid = true,
+			.isNew = false
 	};
+
 	if(instance->decodeIdx == instance->processIdx) {
-		return invalidPacket;
+		return packet;
 	}
+
 	uint8_t idx = instance->processIdx;
 
 	Coms_IncIdx(&instance->processIdx);
+	memcpy(&packet, &instance->rxPacket[idx], sizeof(instance->rxPacket[idx]));
 
-	return instance->rxPacket[idx];
+	instance->rxPacket[idx].isNew = false;
+
+	return packet;
 }
 
 

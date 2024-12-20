@@ -10,10 +10,12 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 #include "stm32f4xx_hal.h"
 
 #define DMA_UART_HANDLE &hdma_usart1_rx
 
+#define HAS_USB_COMMS
 #define CANSPI
 //#define FDCAN
 
@@ -31,7 +33,9 @@
 // Define communication types
 typedef enum {
     COMM_UART,
+#ifdef HAS_USB_COMMS
     COMM_USB,
+#endif
     COMM_CAN
 } CommType;
 
@@ -40,6 +44,7 @@ typedef struct {
     uint8_t data[MAX_DATA_SIZE];   // data bytes
     uint8_t length; //length of data bytes
     bool invalid;
+    bool isNew;
 } DecodedPacket_t;
 
 typedef struct {
@@ -72,7 +77,8 @@ HAL_StatusTypeDef Comm_Receive(ComsInterface_t *instance, uint8_t *data, uint16_
 void Comm_Process(ComsInterface_t *instance);
 DecodedPacket_t Comm_GetPacket(ComsInterface_t *instance);
 
-
-
+#if defined(CANSPI) && defined(FDCAN)
+#error "Cannot define both CANSPI and FDCAN"
+#endif
 
 #endif /* INC_COMS_HANDLER_H_ */
