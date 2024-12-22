@@ -102,7 +102,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  //CANSPI_Initialize();
+  CANSPI_Initialize();
   Comm_Init(&usb, COMM_USB, NULL);
   Comm_Init(&serial, COMM_UART, &huart1);
 
@@ -124,20 +124,20 @@ int main(void)
 	  response = Comm_GetPacket(&serial);
 	  Comm_Send(&usb, &response);
 
-//	  if(!input.invalid) {
-//		  txMessage.frame.idType = dEXTENDED_CAN_MSG_ID_2_0B;
-//		  txMessage.frame.id = input.command;
-//		  txMessage.frame.dlc = input.length;
-//		  if(input.length > 0) txMessage.frame.data0 = input.data[0];
-//		  if(input.length > 1) txMessage.frame.data1 = input.data[1];
-//		  if(input.length > 2) txMessage.frame.data2 = input.data[2];
-//		  if(input.length > 3) txMessage.frame.data3 = input.data[3];
-//		  if(input.length > 4) txMessage.frame.data4 = input.data[4];
-//		  if(input.length > 5) txMessage.frame.data5 = input.data[5];
-//		  if(input.length > 6) txMessage.frame.data6 = input.data[6];
-//		  if(input.length > 7) txMessage.frame.data7 = input.data[7];
-//		  CANSPI_Transmit(&txMessage);
-//	  }
+	  if(!input.invalid) {
+		  txMessage.frame.idType = dEXTENDED_CAN_MSG_ID_2_0B;
+		  txMessage.frame.id = input.command;
+		  txMessage.frame.dlc = input.length < 1 ? 1 : input.length;
+		  if(input.length >= 0) txMessage.frame.data0 = input.data[0];
+		  if(input.length > 1) txMessage.frame.data1 = input.data[1];
+		  if(input.length > 2) txMessage.frame.data2 = input.data[2];
+		  if(input.length > 3) txMessage.frame.data3 = input.data[3];
+		  if(input.length > 4) txMessage.frame.data4 = input.data[4];
+		  if(input.length > 5) txMessage.frame.data5 = input.data[5];
+		  if(input.length > 6) txMessage.frame.data6 = input.data[6];
+		  if(input.length > 7) txMessage.frame.data7 = input.data[7];
+		  CANSPI_Transmit(&txMessage);
+	  }
 
     /* USER CODE END WHILE */
 
