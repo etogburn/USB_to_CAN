@@ -2425,9 +2425,9 @@ void MX_USART1_UART_Init(void)
  8001048:	4b11      	ldr	r3, [pc, #68]	@ (8001090 <MX_USART1_UART_Init+0x4c>)
  800104a:	4a12      	ldr	r2, [pc, #72]	@ (8001094 <MX_USART1_UART_Init+0x50>)
  800104c:	601a      	str	r2, [r3, #0]
-  huart1.Init.BaudRate = 921600;
+  huart1.Init.BaudRate = 230400;
  800104e:	4b10      	ldr	r3, [pc, #64]	@ (8001090 <MX_USART1_UART_Init+0x4c>)
- 8001050:	f44f 2261 	mov.w	r2, #921600	@ 0xe1000
+ 8001050:	f44f 3261 	mov.w	r2, #230400	@ 0x38400
  8001054:	605a      	str	r2, [r3, #4]
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
  8001056:	4b0e      	ldr	r3, [pc, #56]	@ (8001090 <MX_USART1_UART_Init+0x4c>)
@@ -2449,28 +2449,27 @@ void MX_USART1_UART_Init(void)
  800106e:	4b08      	ldr	r3, [pc, #32]	@ (8001090 <MX_USART1_UART_Init+0x4c>)
  8001070:	2200      	movs	r2, #0
  8001072:	619a      	str	r2, [r3, #24]
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_8;
  8001074:	4b06      	ldr	r3, [pc, #24]	@ (8001090 <MX_USART1_UART_Init+0x4c>)
- 8001076:	2200      	movs	r2, #0
- 8001078:	61da      	str	r2, [r3, #28]
+ 8001076:	f44f 4200 	mov.w	r2, #32768	@ 0x8000
+ 800107a:	61da      	str	r2, [r3, #28]
   if (HAL_UART_Init(&huart1) != HAL_OK)
- 800107a:	4805      	ldr	r0, [pc, #20]	@ (8001090 <MX_USART1_UART_Init+0x4c>)
- 800107c:	f002 ff35 	bl	8003eea <HAL_UART_Init>
- 8001080:	4603      	mov	r3, r0
- 8001082:	2b00      	cmp	r3, #0
- 8001084:	d001      	beq.n	800108a <MX_USART1_UART_Init+0x46>
+ 800107c:	4804      	ldr	r0, [pc, #16]	@ (8001090 <MX_USART1_UART_Init+0x4c>)
+ 800107e:	f002 ff34 	bl	8003eea <HAL_UART_Init>
+ 8001082:	4603      	mov	r3, r0
+ 8001084:	2b00      	cmp	r3, #0
+ 8001086:	d001      	beq.n	800108c <MX_USART1_UART_Init+0x48>
   {
     Error_Handler();
- 8001086:	f7ff fed1 	bl	8000e2c <Error_Handler>
+ 8001088:	f7ff fed0 	bl	8000e2c <Error_Handler>
   }
   /* USER CODE BEGIN USART1_Init 2 */
 
   /* USER CODE END USART1_Init 2 */
 
 }
- 800108a:	bf00      	nop
- 800108c:	bd80      	pop	{r7, pc}
- 800108e:	bf00      	nop
+ 800108c:	bf00      	nop
+ 800108e:	bd80      	pop	{r7, pc}
  8001090:	20000368 	.word	0x20000368
  8001094:	40011000 	.word	0x40011000
 
